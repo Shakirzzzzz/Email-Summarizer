@@ -14,7 +14,7 @@ import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name="User Actions Endpoints", description = "Operations that current user can perform")
+@Tag(name="User Actions Endpoints", description = "Operations that current logged in user can perform")
 public class UserController {
 
     private final UserService userService;
