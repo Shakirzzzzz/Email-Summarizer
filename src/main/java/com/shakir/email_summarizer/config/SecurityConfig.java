@@ -59,12 +59,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(configurer ->
                 configurer
-                        .requestMatchers("/api/auth/**","/swagger-ui/**","/v3/api-docs/**",
+                        .requestMatchers("/emails/oauth2/callback","/api/auth/**","/swagger-ui/**","/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**","/docs").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
         http.csrf(csrf -> csrf.disable());
-        http.exceptionHandling(exceptionHandeling -> exceptionHandeling.authenticationEntryPoint(authenticationEntryPoint()));
+        http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()));
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

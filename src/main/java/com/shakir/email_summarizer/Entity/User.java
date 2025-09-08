@@ -16,7 +16,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String firstName;
@@ -29,9 +29,6 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
-
-    @Column(unique = true)
-    private String oauthId;
 
     @Column(length = 2048)
     private String accessToken;
@@ -92,11 +89,11 @@ public class User implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -122,14 +119,6 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getOauthId() {
-        return oauthId;
-    }
-
-    public void setOauthId(String oauthId) {
-        this.oauthId = oauthId;
     }
 
     public String getAccessToken() {
