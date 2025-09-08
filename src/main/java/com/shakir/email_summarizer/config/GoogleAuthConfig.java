@@ -31,7 +31,8 @@ public class GoogleAuthConfig {
                 clientId,
                 clientSecret,
                 SCOPES
-        ).setAccessType("offline").build();
+        ).setAccessType("offline")
+                .setApprovalPrompt("force").build();
     }
 
 

@@ -5,9 +5,11 @@ import com.shakir.email_summarizer.Service.EmailConnectService;
 import com.shakir.email_summarizer.Util.FindAuthenticatedUser;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Email Connect Endpoint", description = "Authorize this app to fetch and  store the access and refresh token")
 @RestController
 @RequestMapping("/emails/oauth2")
 public class EmailOauthController {

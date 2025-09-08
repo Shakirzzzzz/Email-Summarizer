@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,9 @@ public class User implements UserDetails {
 
     @Column(length = 2048)
     private String accessToken;
+
+    @Column()
+    private Instant accessTokenExpiry;
 
     @Column(length = 2048)
     private String refreshToken;
@@ -139,5 +143,13 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Instant getAccessTokenExpiry() {
+        return accessTokenExpiry;
+    }
+
+    public void setAccessTokenExpiry(Instant accessTokenExpiry) {
+        this.accessTokenExpiry = accessTokenExpiry;
     }
 }
