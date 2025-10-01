@@ -53,6 +53,7 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name="user_id") )
     private List<Authority> authorities;
 
+
     public User(){}
 
     @Override

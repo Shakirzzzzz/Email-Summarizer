@@ -8,6 +8,7 @@ import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 import com.google.api.services.gmail.model.MessagePart;
 import com.google.api.services.gmail.model.MessagePartHeader;
+import com.shakir.email_summarizer.Entity.Email;
 import com.shakir.email_summarizer.Repository.UserRepository;
 import com.shakir.email_summarizer.Response.EmailOverviewResponse;
 import com.shakir.email_summarizer.Response.EmailsFetchResponse;
@@ -17,12 +18,11 @@ import com.shakir.email_summarizer.Util.GmailService;
 
 import java.util.Base64;
 
-import jakarta.annotation.PostConstruct;
-import org.apache.commons.codec.binary.StringUtils;
+
 import org.jsoup.Jsoup;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,16 +41,18 @@ public class EmailFetchServiceImpl implements EmailFetchService{
     private final UserRepository userRepository;
     private final GmailService gmailService;
     private final ChatModel chatModel;
+    private final emailCachingService emailCachingService;
 
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
     @Autowired
-    public EmailFetchServiceImpl(EmailConnectService emailConnectService, FindAuthenticatedUser findAuthenticatedUser, UserRepository userRepository, GmailService gmailService, ChatModel chatModel) {
+    public EmailFetchServiceImpl(EmailConnectService emailConnectService, FindAuthenticatedUser findAuthenticatedUser, UserRepository userRepository, GmailService gmailService, ChatModel chatModel, emailCachingService emailCachingService) {
         this.emailConnectService = emailConnectService;
         this.findAuthenticatedUser = findAuthenticatedUser;
         this.userRepository = userRepository;
         this.gmailService = gmailService;
         this.chatModel = chatModel;
+        this.emailCachingService = emailCachingService;
     }
 
     @Transactional(readOnly = true)
@@ -83,6 +85,11 @@ public class EmailFetchServiceImpl implements EmailFetchService{
     }
 
     public FullEmailResponse fetchMailById(String emailId) throws GeneralSecurityException, IOException {
+        if(emailCachingService.isCached(emailId)){
+            Email cachedEmail = emailCachingService.findCachedEmailById(emailId);
+            FullEmailResponse emailResponse = new FullEmailResponse(cachedEmail.getEmailId(), cachedEmail.getSubject(), cachedEmail.getMessageBody());
+            return emailResponse;
+        }
         Gmail gmail = gmailService.getGmailService();
         Message fullMessage = gmail.users().messages().get("me",emailId).setFormat("full")
                 .execute();
@@ -102,6 +109,7 @@ public class EmailFetchServiceImpl implements EmailFetchService{
 
         String reply =  chatModel.call(message);
         FullEmailResponse emailResponse = new FullEmailResponse(emailId,subject,reply);
+        emailCachingService.storeInCache(emailId,subject,reply);
         return emailResponse;
     }
 
