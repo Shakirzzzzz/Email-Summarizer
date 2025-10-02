@@ -1,10 +1,10 @@
 package com.shakir.email_summarizer.Entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
 
 @Entity
 public class Email {
@@ -18,6 +18,16 @@ public class Email {
     @Lob
     @Column(nullable = false,columnDefinition = "LONGTEXT")
     private String messageBody;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+
+    @CreationTimestamp
+    @Column(updatable = false,name = "created_at")
+    private Date createdAt;
+
 
     public Email(){}
 
@@ -49,6 +59,14 @@ public class Email {
 
     public void setMessageBody(String messageBody) {
         this.messageBody = messageBody;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

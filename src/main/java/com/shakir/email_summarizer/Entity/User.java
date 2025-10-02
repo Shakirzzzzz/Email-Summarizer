@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,9 @@ public class User implements UserDetails {
     // user_id is in this dummy table which is the foreign key
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name="user_id") )
     private List<Authority> authorities;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Email> emails;
 
 
     public User(){}
@@ -152,5 +156,30 @@ public class User implements UserDetails {
 
     public void setAccessTokenExpiry(Instant accessTokenExpiry) {
         this.accessTokenExpiry = accessTokenExpiry;
+    }
+
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
+    }
+
+
+    public void add(Email email){
+        if(emails == null){
+            emails = new ArrayList<>();
+        }
+        emails.add(email);
+        email.setUser(this);
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }
