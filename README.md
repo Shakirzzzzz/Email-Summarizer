@@ -4,7 +4,7 @@ An AI-powered backend service that connects to a user's email account, retrieves
 The project demonstrates secure backend design with OAuth2 authentication, JWT authorization, and integration with AI services.
 
 This project focuses purely on backend engineering and API design.
-# Demo:
+## Demo:
 https://youtu.be/xlHLRKAw4Ec?si=o4AzdGjZ-kL2tiMD
 
 ## Running the Project
