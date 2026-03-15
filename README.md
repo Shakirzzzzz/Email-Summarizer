@@ -9,9 +9,13 @@ https://youtu.be/xlHLRKAw4Ec?si=o4AzdGjZ-kL2tiMD
 
 ## Running the Project
 ### Start:
+```bash
 sudo docker-compose up
+```
 ### Stop:
+```bash
 sudo docker-compose down
+```
 
 
 ## Project runs at
